@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Auth\StaffAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,20 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])
 
 /*
 |--------------------------------------------------------------------------
+| Staff Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [StaffAuthController::class, 'showLogin'])
+    ->name('staff.login');
+
+Route::post('/login', [StaffAuthController::class, 'login'])
+    ->name('staff.login.submit');
+
+Route::post('/logout', [StaffAuthController::class, 'logout'])
+    ->name('staff.logout');
+
+/*
+|--------------------------------------------------------------------------
 | Admin Protected Routes
 |--------------------------------------------------------------------------
 */
@@ -36,4 +51,16 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
 
     Route::resource('users', AdminUserController::class)->except(['show']);
     Route::resource('staffs', StaffController::class)->except(['show']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Staff Protected Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('staff')->name('staff.')->middleware('staff.auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('staff.dashboard');
+    })->name('dashboard');
 });
