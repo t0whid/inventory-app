@@ -129,7 +129,8 @@
                 Stock
             </a>
 
-            <a href="#" class="{{ request()->is('staff/wastage*') ? 'active' : '' }}">
+            <a href="{{ route('staff.wastage.index') }}"
+                class="{{ request()->routeIs('staff.wastage.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-trash"></i>
                 Wastage
             </a>
