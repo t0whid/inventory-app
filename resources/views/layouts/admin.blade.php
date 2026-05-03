@@ -100,6 +100,61 @@
             display: none;
         }
 
+        .topbar-user-btn {
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .topbar-user-btn:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .user-dropdown {
+            width: 300px;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: #eef2ff;
+            color: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .dropdown-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-info-label {
+            color: #6b7280;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .dropdown-info-value {
+            color: #111827;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .min-w-0 {
+            min-width: 0;
+        }
+
         #toast-container > .toast {
             opacity: 1;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -155,6 +210,10 @@
 
             .topbar-user-name {
                 display: none;
+            }
+
+            .user-dropdown {
+                width: 270px;
             }
         }
     </style>
@@ -227,30 +286,69 @@
             </div>
 
             <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <i class="fa-solid fa-user-circle me-1"></i>
-                    <span class="topbar-user-name">{{ auth()->user()->name ?? 'Admin' }}</span>
+                <button
+                    class="btn topbar-user-btn dropdown-toggle d-flex align-items-center gap-2 px-3"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-circle-user fs-5"></i>
+                    <span class="topbar-user-name fw-semibold">
+                        {{ auth()->user()->name ?? 'Admin' }}
+                    </span>
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <span class="dropdown-item-text small text-muted">
-                            {{ auth()->user()->phone ?? '' }}
-                        </span>
+                <ul class="dropdown-menu dropdown-menu-end user-dropdown shadow border-0">
+                    <li class="px-3 py-3 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="user-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <div class="min-w-0">
+                                <div class="fw-semibold text-dark text-truncate">
+                                    {{ auth()->user()->name ?? 'Admin' }}
+                                </div>
+                                <div class="small text-muted text-truncate">
+                                    {{ auth()->user()->phone ?? '-' }}
+                                </div>
+                            </div>
+                        </div>
                     </li>
 
-                    <li>
-                        <span class="dropdown-item-text small text-muted">
-                            Role: {{ auth()->user()->role ?? '' }}
-                        </span>
+                    <li class="px-3 py-2">
+                        <div class="dropdown-info-row">
+                            <span class="dropdown-info-label">
+                                <i class="fa-solid fa-phone me-1"></i>
+                                Phone
+                            </span>
+
+                            <span class="dropdown-info-value">
+                                {{ auth()->user()->phone ?? '-' }}
+                            </span>
+                        </div>
                     </li>
 
-                    <li><hr class="dropdown-divider"></li>
+                    <li class="px-3 py-2">
+                        <div class="dropdown-info-row">
+                            <span class="dropdown-info-label">
+                                <i class="fa-solid fa-user-shield me-1"></i>
+                                Role
+                            </span>
+
+                            <span class="dropdown-info-value text-capitalize">
+                                {{ str_replace('_', ' ', auth()->user()->role ?? '-') }}
+                            </span>
+                        </div>
+                    </li>
+
+                    <li><hr class="dropdown-divider my-2"></li>
 
                     <li>
                         <form action="{{ route('admin.logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="dropdown-item text-danger">
+
+                            <button type="submit" class="dropdown-item text-danger py-2">
                                 <i class="fa-solid fa-right-from-bracket me-2"></i>
                                 Logout
                             </button>
