@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Staff Panel') - Inventory App</title>
@@ -41,7 +42,7 @@
             background: #fff;
             border-radius: 14px;
             padding: 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
         }
 
         .bottom-nav {
@@ -80,106 +81,110 @@
             padding-bottom: 76px;
         }
 
-        #toast-container > .toast {
+        #toast-container>.toast {
             opacity: 1;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
         }
     </style>
 
     @stack('styles')
 </head>
+
 <body>
 
-<div class="staff-wrapper">
-    <div class="staff-topbar">
-        <div class="d-flex justify-content-between align-items-center gap-3">
-            <div>
-                <h5 class="mb-0">@yield('page_title', 'Staff Panel')</h5>
-                <small class="text-muted">
-                    {{ $loggedStaff->name ?? session('staff_name') }}
-                </small>
-            </div>
+    <div class="staff-wrapper">
+        <div class="staff-topbar">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+                <div>
+                    <h5 class="mb-0">@yield('page_title', 'Staff Panel')</h5>
+                    <small class="text-muted">
+                        {{ $loggedStaff->name ?? session('staff_name') }}
+                    </small>
+                </div>
 
-            <form action="{{ route('staff.logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger btn-sm">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
-            </form>
+                <form action="{{ route('staff.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="staff-content content-with-bottom-nav">
+            @yield('content')
+        </div>
+
+        <div class="bottom-nav">
+            <a href="{{ route('staff.dashboard') }}"
+                class="{{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
+                <i class="fa-solid fa-house"></i>
+                Home
+            </a>
+
+            <a href="{{ route('staff.stock-entry.index') }}"
+                class="{{ request()->routeIs('staff.stock-entry.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                Stock
+            </a>
+
+            <a href="#" class="{{ request()->is('staff/wastage*') ? 'active' : '' }}">
+                <i class="fa-solid fa-trash"></i>
+                Wastage
+            </a>
+
+            <a href="#" class="{{ request()->is('staff/oos*') ? 'active' : '' }}">
+                <i class="fa-solid fa-circle-xmark"></i>
+                OOS
+            </a>
         </div>
     </div>
 
-    <div class="staff-content content-with-bottom-nav">
-        @yield('content')
-    </div>
+    {{-- Bootstrap JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div class="bottom-nav">
-        <a href="{{ route('staff.dashboard') }}" class="{{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
-            <i class="fa-solid fa-house"></i>
-            Home
-        </a>
+    {{-- jQuery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-        <a href="#" class="{{ request()->is('staff/stock-entry*') ? 'active' : '' }}">
-            <i class="fa-solid fa-boxes-stacked"></i>
-            Stock
-        </a>
+    {{-- Toastr JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-        <a href="#" class="{{ request()->is('staff/wastage*') ? 'active' : '' }}">
-            <i class="fa-solid fa-trash"></i>
-            Wastage
-        </a>
+    <script>
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+            newestOnTop: true,
+            preventDuplicates: true
+        };
 
-        <a href="#" class="{{ request()->is('staff/oos*') ? 'active' : '' }}">
-            <i class="fa-solid fa-circle-xmark"></i>
-            OOS
-        </a>
-    </div>
-</div>
+        @if (session('success'))
+            toastr.success(@json(session('success')));
+        @endif
 
-{{-- Bootstrap JS --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        @if (session('error'))
+            toastr.error(@json(session('error')));
+        @endif
 
-{{-- jQuery --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        @if (session('warning'))
+            toastr.warning(@json(session('warning')));
+        @endif
 
-{{-- Toastr JS --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        @if (session('info'))
+            toastr.info(@json(session('info')));
+        @endif
 
-<script>
-    toastr.options = {
-        closeButton: true,
-        progressBar: true,
-        positionClass: "toast-top-right",
-        timeOut: "4000",
-        newestOnTop: true,
-        preventDuplicates: true
-    };
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error(@json($error));
+            @endforeach
+        @endif
+    </script>
 
-    @if(session('success'))
-        toastr.success(@json(session('success')));
-    @endif
-
-    @if(session('error'))
-        toastr.error(@json(session('error')));
-    @endif
-
-    @if(session('warning'))
-        toastr.warning(@json(session('warning')));
-    @endif
-
-    @if(session('info'))
-        toastr.info(@json(session('info')));
-    @endif
-
-    @if($errors->any())
-        @foreach($errors->all() as $error)
-            toastr.error(@json($error));
-        @endforeach
-    @endif
-</script>
-
-@stack('scripts')
+    @stack('scripts')
 
 </body>
+
 </html>

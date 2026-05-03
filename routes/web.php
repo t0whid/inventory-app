@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\StaffAuthController;
+use App\Http\Controllers\Staff\StockEntryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -65,4 +66,10 @@ Route::prefix('staff')->name('staff.')->middleware('staff.auth')->group(function
     Route::get('/dashboard', function () {
         return view('staff.dashboard');
     })->name('dashboard');
+
+    Route::get('/stock-entry', [StockEntryController::class, 'index'])
+        ->name('stock-entry.index');
+
+    Route::post('/stock-entry', [StockEntryController::class, 'store'])
+        ->name('stock-entry.store');
 });

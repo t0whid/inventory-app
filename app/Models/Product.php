@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->status === 'active';
     }
+
+    public function dailyStocks()
+    {
+        return $this->hasMany(DailyStock::class);
+    }
 }
