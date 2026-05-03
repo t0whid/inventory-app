@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin Panel') - Inventory App</title>
@@ -37,7 +38,7 @@
             padding: 20px;
             font-size: 20px;
             font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-menu {
@@ -84,7 +85,7 @@
             background: #fff;
             border-radius: 12px;
             padding: 22px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
         }
 
         .mobile-toggle {
@@ -155,9 +156,9 @@
             min-width: 0;
         }
 
-        #toast-container > .toast {
+        #toast-container>.toast {
             opacity: 1;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
         }
 
@@ -182,7 +183,7 @@
                 display: block;
                 position: fixed;
                 inset: 0;
-                background: rgba(0,0,0,0.45);
+                background: rgba(0, 0, 0, 0.45);
                 z-index: 1040;
             }
 
@@ -220,214 +221,217 @@
 
     @stack('styles')
 </head>
+
 <body>
 
-<div class="admin-wrapper">
+    <div class="admin-wrapper">
 
-    {{-- Sidebar --}}
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-boxes-stacked me-2"></i>
-            Inventory App
-        </div>
+        {{-- Sidebar --}}
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-boxes-stacked me-2"></i>
+                Inventory App
+            </div>
 
-        <div class="sidebar-menu">
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="fa-solid fa-gauge"></i>
-                Dashboard
-            </a>
+            <div class="sidebar-menu">
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <i class="fa-solid fa-gauge"></i>
+                    Dashboard
+                </a>
 
-            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-user-shield"></i>
-                Admin Users
-            </a>
+                <a href="{{ route('admin.users.index') }}"
+                    class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user-shield"></i>
+                    Admin Users
+                </a>
 
-            <a href="#" class="{{ request()->is('admin/products*') ? 'active' : '' }}">
-                <i class="fa-solid fa-box"></i>
-                Products
-            </a>
+                <a href="#" class="{{ request()->is('admin/products*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-box"></i>
+                    Products
+                </a>
 
-            <a href="#" class="{{ request()->is('admin/staffs*') ? 'active' : '' }}">
-                <i class="fa-solid fa-users"></i>
-                Staffs
-            </a>
+                <a href="{{ route('admin.staffs.index') }}"
+                    class="{{ request()->routeIs('admin.staffs.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users"></i>
+                    Staffs
+                </a>
 
-            <a href="#" class="{{ request()->is('admin/reports*') ? 'active' : '' }}">
-                <i class="fa-solid fa-chart-line"></i>
-                Reports
-            </a>
+                <a href="#" class="{{ request()->is('admin/reports*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Reports
+                </a>
 
-            <a href="#" class="{{ request()->is('admin/alerts*') ? 'active' : '' }}">
-                <i class="fa-solid fa-bell"></i>
-                Alerts
-            </a>
+                <a href="#" class="{{ request()->is('admin/alerts*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bell"></i>
+                    Alerts
+                </a>
 
-            <a href="#" class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
-                <i class="fa-solid fa-gear"></i>
-                Settings
-            </a>
-        </div>
-    </aside>
+                <a href="#" class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-gear"></i>
+                    Settings
+                </a>
+            </div>
+        </aside>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    {{-- Main Content --}}
-    <main class="main-content">
-        <div class="topbar">
-            <div class="d-flex align-items-center gap-3">
-                <button type="button" class="mobile-toggle" id="sidebarToggle">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
+        {{-- Main Content --}}
+        <main class="main-content">
+            <div class="topbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="mobile-toggle" id="sidebarToggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
 
-                <div>
-                    <h5 class="mb-0">@yield('page_title', 'Admin Panel')</h5>
-                    <small class="text-muted">@yield('page_subtitle', 'Manage your inventory system')</small>
+                    <div>
+                        <h5 class="mb-0">@yield('page_title', 'Admin Panel')</h5>
+                        <small class="text-muted">@yield('page_subtitle', 'Manage your inventory system')</small>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn topbar-user-btn dropdown-toggle d-flex align-items-center gap-2 px-3"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-user fs-5"></i>
+                        <span class="topbar-user-name fw-semibold">
+                            {{ auth()->user()->name ?? 'Admin' }}
+                        </span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end user-dropdown shadow border-0">
+                        <li class="px-3 py-3 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="user-avatar">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+
+                                <div class="min-w-0">
+                                    <div class="fw-semibold text-dark text-truncate">
+                                        {{ auth()->user()->name ?? 'Admin' }}
+                                    </div>
+                                    <div class="small text-muted text-truncate">
+                                        {{ auth()->user()->phone ?? '-' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="px-3 py-2">
+                            <div class="dropdown-info-row">
+                                <span class="dropdown-info-label">
+                                    <i class="fa-solid fa-phone me-1"></i>
+                                    Phone
+                                </span>
+
+                                <span class="dropdown-info-value">
+                                    {{ auth()->user()->phone ?? '-' }}
+                                </span>
+                            </div>
+                        </li>
+
+                        <li class="px-3 py-2">
+                            <div class="dropdown-info-row">
+                                <span class="dropdown-info-label">
+                                    <i class="fa-solid fa-user-shield me-1"></i>
+                                    Role
+                                </span>
+
+                                <span class="dropdown-info-value text-capitalize">
+                                    {{ str_replace('_', ' ', auth()->user()->role ?? '-') }}
+                                </span>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider my-2">
+                        </li>
+
+                        <li>
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+
+                                <button type="submit" class="dropdown-item text-danger py-2">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="dropdown">
-                <button
-                    class="btn topbar-user-btn dropdown-toggle d-flex align-items-center gap-2 px-3"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <i class="fa-solid fa-circle-user fs-5"></i>
-                    <span class="topbar-user-name fw-semibold">
-                        {{ auth()->user()->name ?? 'Admin' }}
-                    </span>
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end user-dropdown shadow border-0">
-                    <li class="px-3 py-3 border-bottom">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="user-avatar">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-
-                            <div class="min-w-0">
-                                <div class="fw-semibold text-dark text-truncate">
-                                    {{ auth()->user()->name ?? 'Admin' }}
-                                </div>
-                                <div class="small text-muted text-truncate">
-                                    {{ auth()->user()->phone ?? '-' }}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="px-3 py-2">
-                        <div class="dropdown-info-row">
-                            <span class="dropdown-info-label">
-                                <i class="fa-solid fa-phone me-1"></i>
-                                Phone
-                            </span>
-
-                            <span class="dropdown-info-value">
-                                {{ auth()->user()->phone ?? '-' }}
-                            </span>
-                        </div>
-                    </li>
-
-                    <li class="px-3 py-2">
-                        <div class="dropdown-info-row">
-                            <span class="dropdown-info-label">
-                                <i class="fa-solid fa-user-shield me-1"></i>
-                                Role
-                            </span>
-
-                            <span class="dropdown-info-value text-capitalize">
-                                {{ str_replace('_', ' ', auth()->user()->role ?? '-') }}
-                            </span>
-                        </div>
-                    </li>
-
-                    <li><hr class="dropdown-divider my-2"></li>
-
-                    <li>
-                        <form action="{{ route('admin.logout') }}" method="POST">
-                            @csrf
-
-                            <button type="submit" class="dropdown-item text-danger py-2">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+            <div class="content-area">
+                @yield('content')
             </div>
-        </div>
+        </main>
+    </div>
 
-        <div class="content-area">
-            @yield('content')
-        </div>
-    </main>
-</div>
+    {{-- Bootstrap JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-{{-- Bootstrap JS --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- jQuery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-{{-- jQuery --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    {{-- Toastr JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-{{-- Toastr JS --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-<script>
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
+        sidebarToggle?.addEventListener('click', function() {
+            sidebar.classList.add('show');
+            sidebarOverlay.classList.add('show');
+        });
 
-    sidebarToggle?.addEventListener('click', function () {
-        sidebar.classList.add('show');
-        sidebarOverlay.classList.add('show');
-    });
+        sidebarOverlay?.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        });
+    </script>
 
-    sidebarOverlay?.addEventListener('click', function () {
-        sidebar.classList.remove('show');
-        sidebarOverlay.classList.remove('show');
-    });
-</script>
+    <script>
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            timeOut: "4000",
+            extendedTimeOut: "1000",
+            showDuration: "300",
+            hideDuration: "300",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            newestOnTop: true,
+            preventDuplicates: true
+        };
 
-<script>
-    toastr.options = {
-        closeButton: true,
-        progressBar: true,
-        positionClass: "toast-top-right",
-        timeOut: "4000",
-        extendedTimeOut: "1000",
-        showDuration: "300",
-        hideDuration: "300",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        newestOnTop: true,
-        preventDuplicates: true
-    };
+        @if (session('success'))
+            toastr.success(@json(session('success')));
+        @endif
 
-    @if(session('success'))
-        toastr.success(@json(session('success')));
-    @endif
+        @if (session('error'))
+            toastr.error(@json(session('error')));
+        @endif
 
-    @if(session('error'))
-        toastr.error(@json(session('error')));
-    @endif
+        @if (session('warning'))
+            toastr.warning(@json(session('warning')));
+        @endif
 
-    @if(session('warning'))
-        toastr.warning(@json(session('warning')));
-    @endif
+        @if (session('info'))
+            toastr.info(@json(session('info')));
+        @endif
 
-    @if(session('info'))
-        toastr.info(@json(session('info')));
-    @endif
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error(@json($error));
+            @endforeach
+        @endif
+    </script>
 
-    @if($errors->any())
-        @foreach($errors->all() as $error)
-            toastr.error(@json($error));
-        @endforeach
-    @endif
-</script>
-
-@stack('scripts')
+    @stack('scripts')
 
 </body>
+
 </html>

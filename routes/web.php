@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,4 +35,5 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     })->name('dashboard');
 
     Route::resource('users', AdminUserController::class)->except(['show']);
+    Route::resource('staffs', StaffController::class)->except(['show']);
 });
