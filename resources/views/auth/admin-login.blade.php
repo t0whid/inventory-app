@@ -5,11 +5,14 @@
     <title>Admin Login - Inventory App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{-- Bootstrap --}}
+    {{-- Bootstrap 5 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     {{-- Font Awesome --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    {{-- Toastr CSS --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
     <style>
         body {
@@ -19,6 +22,7 @@
             justify-content: center;
             align-items: center;
             padding: 16px;
+            font-family: Arial, sans-serif;
         }
 
         .login-card {
@@ -43,6 +47,12 @@
             margin: 0 auto 18px;
         }
 
+        #toast-container > .toast {
+            opacity: 1;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-radius: 8px;
+        }
+
         @media (max-width: 480px) {
             .login-card {
                 padding: 24px 20px;
@@ -60,13 +70,6 @@
     <h4 class="text-center mb-1">Inventory Admin</h4>
     <p class="text-center text-muted mb-4">Login with phone and password</p>
 
-    @if(session('error'))
-        <div class="alert alert-danger">
-            <i class="fa-solid fa-triangle-exclamation me-1"></i>
-            {{ session('error') }}
-        </div>
-    @endif
-
     <form action="{{ route('admin.login.submit') }}" method="POST">
         @csrf
 
@@ -76,9 +79,15 @@
                 <span class="input-group-text">
                     <i class="fa-solid fa-phone"></i>
                 </span>
-                <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="01700000000">
+                <input
+                    type="text"
+                    name="phone"
+                    value="{{ old('phone') }}"
+                    class="form-control"
+                    placeholder="9876543210"
+                    autocomplete="tel"
+                >
             </div>
-            @error('phone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
         </div>
 
         <div class="mb-3">
@@ -87,26 +96,69 @@
                 <span class="input-group-text">
                     <i class="fa-solid fa-lock"></i>
                 </span>
-                <input type="password" name="password" class="form-control" placeholder="Enter password">
-            </div>
-            @error('password') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="form-check">
-                <input type="checkbox" name="remember" value="1" class="form-check-input" id="remember">
-                <label class="form-check-label" for="remember">Remember me</label>
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                >
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 py-2">
+        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">
             <i class="fa-solid fa-right-to-bracket me-1"></i>
             Login
         </button>
     </form>
 </div>
 
+{{-- Bootstrap JS --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{{-- jQuery --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+{{-- Toastr JS --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+        extendedTimeOut: "1000",
+        showDuration: "300",
+        hideDuration: "300",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut",
+        newestOnTop: true,
+        preventDuplicates: true
+    };
+
+    @if(session('success'))
+        toastr.success(@json(session('success')));
+    @endif
+
+    @if(session('error'))
+        toastr.error(@json(session('error')));
+    @endif
+
+    @if(session('warning'))
+        toastr.warning(@json(session('warning')));
+    @endif
+
+    @if(session('info'))
+        toastr.info(@json(session('info')));
+    @endif
+
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            toastr.error(@json($error));
+        @endforeach
+    @endif
+</script>
 
 </body>
 </html>

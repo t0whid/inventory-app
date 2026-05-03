@@ -11,6 +11,9 @@
     {{-- Font Awesome --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
+    {{-- Toastr CSS --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
     <style>
         body {
             background: #f5f7fb;
@@ -97,6 +100,12 @@
             display: none;
         }
 
+        #toast-container > .toast {
+            opacity: 1;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-radius: 8px;
+        }
+
         @media (max-width: 991px) {
             .sidebar {
                 position: fixed;
@@ -143,6 +152,10 @@
             .btn {
                 font-size: 14px;
             }
+
+            .topbar-user-name {
+                display: none;
+            }
         }
     </style>
 
@@ -160,12 +173,12 @@
         </div>
 
         <div class="sidebar-menu">
-            <a href="{{ url('/admin/dashboard') }}" class="{{ request()->is('admin/dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="fa-solid fa-gauge"></i>
                 Dashboard
             </a>
 
-            <a href="{{ route('admin.users.index') }}" class="{{ request()->is('admin/users*') ? 'active' : '' }}">
+            <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-user-shield"></i>
                 Admin Users
             </a>
@@ -199,7 +212,7 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    {{-- Main --}}
+    {{-- Main Content --}}
     <main class="main-content">
         <div class="topbar">
             <div class="d-flex align-items-center gap-3">
@@ -216,13 +229,19 @@
             <div class="dropdown">
                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="fa-solid fa-user-circle me-1"></i>
-                    {{ auth()->user()->name ?? 'Admin' }}
+                    <span class="topbar-user-name">{{ auth()->user()->name ?? 'Admin' }}</span>
                 </button>
 
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
                         <span class="dropdown-item-text small text-muted">
                             {{ auth()->user()->phone ?? '' }}
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="dropdown-item-text small text-muted">
+                            Role: {{ auth()->user()->role ?? '' }}
                         </span>
                     </li>
 
@@ -242,22 +261,6 @@
         </div>
 
         <div class="content-area">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fa-solid fa-circle-check me-2"></i>
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
             @yield('content')
         </div>
     </main>
@@ -265,6 +268,12 @@
 
 {{-- Bootstrap JS --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{{-- jQuery --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+{{-- Toastr JS --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
     const sidebar = document.getElementById('sidebar');
@@ -280,6 +289,44 @@
         sidebar.classList.remove('show');
         sidebarOverlay.classList.remove('show');
     });
+</script>
+
+<script>
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-right",
+        timeOut: "4000",
+        extendedTimeOut: "1000",
+        showDuration: "300",
+        hideDuration: "300",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut",
+        newestOnTop: true,
+        preventDuplicates: true
+    };
+
+    @if(session('success'))
+        toastr.success(@json(session('success')));
+    @endif
+
+    @if(session('error'))
+        toastr.error(@json(session('error')));
+    @endif
+
+    @if(session('warning'))
+        toastr.warning(@json(session('warning')));
+    @endif
+
+    @if(session('info'))
+        toastr.info(@json(session('info')));
+    @endif
+
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            toastr.error(@json($error));
+        @endforeach
+    @endif
 </script>
 
 @stack('scripts')

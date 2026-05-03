@@ -23,25 +23,21 @@
             <div class="col-md-6">
                 <label class="form-label">Name <span class="text-danger">*</span></label>
                 <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Admin name">
-                @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Phone <span class="text-danger">*</span></label>
                 <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="01700000000">
-                @error('phone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="admin@example.com">
-                @error('email') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Password <span class="text-danger">*</span></label>
                 <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters">
-                @error('password') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
@@ -50,7 +46,6 @@
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="super_admin" {{ old('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                 </select>
-                @error('role') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6 d-flex align-items-end">

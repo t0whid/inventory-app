@@ -24,25 +24,21 @@
             <div class="col-md-6">
                 <label class="form-label">Name <span class="text-danger">*</span></label>
                 <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-control">
-                @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Phone <span class="text-danger">*</span></label>
                 <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
-                @error('phone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control">
-                @error('email') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
                 <label class="form-label">Password</label>
                 <input type="password" name="password" class="form-control" placeholder="Leave empty if unchanged">
-                @error('password') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6">
@@ -51,13 +47,18 @@
                     <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="super_admin" {{ old('role', $user->role) === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                 </select>
-                @error('role') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
             <div class="col-md-6 d-flex align-items-end">
                 <div class="form-check form-switch">
-                    <input type="checkbox" name="is_active" value="1" class="form-check-input" id="isActive"
-                        {{ old('is_active', $user->is_active) ? 'checked' : '' }}>
+                    <input
+                        type="checkbox"
+                        name="is_active"
+                        value="1"
+                        class="form-check-input"
+                        id="isActive"
+                        {{ old('is_active', $user->is_active) ? 'checked' : '' }}
+                    >
                     <label class="form-check-label" for="isActive">Active User</label>
                 </div>
             </div>
