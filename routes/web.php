@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\StaffAuthController;
@@ -51,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
 
     Route::resource('users', AdminUserController::class)->except(['show']);
     Route::resource('staffs', StaffController::class)->except(['show']);
+    Route::resource('products', ProductController::class)->except(['show']);
 });
 
 /*

@@ -246,7 +246,8 @@
                     Admin Users
                 </a>
 
-                <a href="#" class="{{ request()->is('admin/products*') ? 'active' : '' }}">
+                <a href="{{ route('admin.products.index') }}"
+                    class="{{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-box"></i>
                     Products
                 </a>
