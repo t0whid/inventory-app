@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DailyStockController;
 use App\Http\Controllers\Admin\PetpoojaSyncController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\TelegramSettingController;
 use App\Http\Controllers\Auth\AdminAuthController;
@@ -59,6 +60,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::post('/telegram-settings/verify', [TelegramSettingController::class, 'verify'])->name('telegram-settings.verify');
     Route::post('/telegram-settings/sync-chat', [TelegramSettingController::class, 'syncChat'])->name('telegram-settings.sync-chat');
     Route::post('/telegram-settings/test', [TelegramSettingController::class, 'test'])->name('telegram-settings.test');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 });
 
 /*

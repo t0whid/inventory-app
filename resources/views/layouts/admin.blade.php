@@ -268,8 +268,9 @@
                     Petpooja Sync
                 </a>
 
-                <a href="#" class="{{ request()->is('admin/reports*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-chart-line"></i>
+                <a href="{{ route('admin.reports.index') }}"
+                    class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-line me-2"></i>
                     Reports
                 </a>
 
