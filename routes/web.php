@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DailyStockController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\IncentiveController;
 use App\Http\Controllers\Admin\PetpoojaSyncController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
@@ -13,7 +15,6 @@ use App\Http\Controllers\Staff\OOSController;
 use App\Http\Controllers\Staff\StockEntryController;
 use App\Http\Controllers\Staff\WastageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\IncentiveController;
 
 Route::get('/', function () {
     return redirect()->route('staff.login');
@@ -44,9 +45,7 @@ Route::post('/logout', [StaffAuthController::class, 'logout'])->name('staff.logo
 */
 Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('users', AdminUserController::class)->except(['show']);
     Route::resource('staffs', StaffController::class)->except(['show']);
@@ -63,6 +62,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::post('/telegram-settings/test', [TelegramSettingController::class, 'test'])->name('telegram-settings.test');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/incentives', [IncentiveController::class, 'index'])->name('incentives.index');
+
 });
 
 /*
