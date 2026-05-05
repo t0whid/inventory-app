@@ -30,7 +30,7 @@
                     name="search"
                     value="{{ request('search') }}"
                     class="form-control"
-                    placeholder="Search by product or category"
+                    placeholder="Search by product, item code or category"
                 >
             </div>
         </div>
@@ -59,7 +59,9 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
+                    <th style="width: 70px;">SL</th>
                     <th>Product</th>
+                    <th>Item Code</th>
                     <th>Category</th>
                     <th>Cost</th>
                     <th>Selling</th>
@@ -74,7 +76,21 @@
                 @forelse($products as $product)
                     <tr>
                         <td>
+                            {{ $products->firstItem() + $loop->index }}
+                        </td>
+
+                        <td>
                             <div class="fw-semibold">{{ $product->product_name }}</div>
+                        </td>
+
+                        <td>
+                            @if($product->item_code)
+                                <span class="badge bg-light text-dark border">
+                                    {{ $product->item_code }}
+                                </span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
                         </td>
 
                         <td>
@@ -127,7 +143,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">
+                        <td colspan="10" class="text-center text-muted py-4">
                             <i class="fa-solid fa-box-open fa-2x mb-2"></i>
                             <div>No product found.</div>
                         </td>
@@ -137,7 +153,7 @@
         </table>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 d-flex justify-content-end">
         {{ $products->links() }}
     </div>
 

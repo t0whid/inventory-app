@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\TelegramSettingController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\StaffAuthController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\OOSController;
 use App\Http\Controllers\Staff\StockEntryController;
 use App\Http\Controllers\Staff\WastageController;
@@ -72,9 +73,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
 */
 Route::prefix('staff')->name('staff.')->middleware('staff.auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('staff.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/stock-entry', [StockEntryController::class, 'index'])->name('stock-entry.index');
     Route::post('/stock-entry', [StockEntryController::class, 'store'])->name('stock-entry.store');

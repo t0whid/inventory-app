@@ -286,10 +286,6 @@
                     Telegram
                 </a>
 
-                <a href="#" class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-gear"></i>
-                    Settings
-                </a>
             </div>
         </aside>
 
