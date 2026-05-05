@@ -5,12 +5,13 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\StaffAuthController;
+use App\Http\Controllers\Staff\OOSController;
 use App\Http\Controllers\Staff\StockEntryController;
 use App\Http\Controllers\Staff\WastageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('admin.login');
+    return redirect()->route('staff.login');
 });
 
 /*
@@ -18,28 +19,22 @@ Route::get('/', function () {
 | Admin Auth Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])
-    ->name('admin.login');
+Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 
-Route::post('/admin/login', [AdminAuthController::class, 'login'])
-    ->name('admin.login.submit');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-Route::post('/admin/logout', [AdminAuthController::class, 'logout'])
-    ->name('admin.logout');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 /*
 |--------------------------------------------------------------------------
 | Staff Auth Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/login', [StaffAuthController::class, 'showLogin'])
-    ->name('staff.login');
+Route::get('/login', [StaffAuthController::class, 'showLogin'])->name('staff.login');
 
-Route::post('/login', [StaffAuthController::class, 'login'])
-    ->name('staff.login.submit');
+Route::post('/login', [StaffAuthController::class, 'login'])->name('staff.login.submit');
 
-Route::post('/logout', [StaffAuthController::class, 'logout'])
-    ->name('staff.logout');
+Route::post('/logout', [StaffAuthController::class, 'logout'])->name('staff.logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -68,17 +63,11 @@ Route::prefix('staff')->name('staff.')->middleware('staff.auth')->group(function
         return view('staff.dashboard');
     })->name('dashboard');
 
-    Route::get('/stock-entry', [StockEntryController::class, 'index'])
-        ->name('stock-entry.index');
-
-    Route::post('/stock-entry', [StockEntryController::class, 'store'])
-        ->name('stock-entry.store');
-    Route::get('/wastage', [WastageController::class, 'index'])
-        ->name('wastage.index');
-
-    Route::post('/wastage', [WastageController::class, 'store'])
-        ->name('wastage.store');
-
-    Route::delete('/wastage/{wastage}', [WastageController::class, 'destroy'])
-        ->name('wastage.destroy');
+    Route::get('/stock-entry', [StockEntryController::class, 'index'])->name('stock-entry.index');
+    Route::post('/stock-entry', [StockEntryController::class, 'store'])->name('stock-entry.store');
+    Route::get('/wastage', [WastageController::class, 'index'])->name('wastage.index');
+    Route::post('/wastage', [WastageController::class, 'store'])->name('wastage.store');
+    Route::delete('/wastage/{wastage}', [WastageController::class, 'destroy'])->name('wastage.destroy');
+    Route::get('/oos', [OOSController::class, 'index'])->name('oos.index');
+    Route::post('/oos', [OOSController::class, 'store'])->name('oos.store');
 });

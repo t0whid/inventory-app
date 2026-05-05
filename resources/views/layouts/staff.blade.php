@@ -135,7 +135,7 @@
                 Wastage
             </a>
 
-            <a href="#" class="{{ request()->is('staff/oos*') ? 'active' : '' }}">
+            <a href="{{ route('staff.oos.index') }}" class="{{ request()->routeIs('staff.oos.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-circle-xmark"></i>
                 OOS
             </a>
