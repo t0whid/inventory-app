@@ -55,7 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
 
     Route::get('/telegram-settings', [TelegramSettingController::class, 'index'])->name('telegram-settings.index');
     Route::post('/telegram-settings', [TelegramSettingController::class, 'update'])->name('telegram-settings.update');
-    Route::delete('/telegram-settings/reset-token', [TelegramSettingController::class, 'resetToken'])->name('telegram-settings.reset-token');
+    // Route::delete('/telegram-settings/reset-token', [TelegramSettingController::class, 'resetToken'])->name('telegram-settings.reset-token');
     Route::post('/telegram-settings/verify', [TelegramSettingController::class, 'verify'])->name('telegram-settings.verify');
     Route::post('/telegram-settings/sync-chat', [TelegramSettingController::class, 'syncChat'])->name('telegram-settings.sync-chat');
     Route::post('/telegram-settings/test', [TelegramSettingController::class, 'test'])->name('telegram-settings.test');

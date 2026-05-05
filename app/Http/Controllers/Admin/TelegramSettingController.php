@@ -50,23 +50,23 @@ class TelegramSettingController extends Controller
             ->with('success', 'Telegram bot token saved. Now verify the bot.');
     }
 
-    public function resetToken()
-    {
-        $setting = TelegramSetting::current();
+    // public function resetToken()
+    // {
+    //     $setting = TelegramSetting::current();
 
-        $setting->update([
-            'bot_token' => null,
-            'bot_username' => null,
-            'admin_chat_id' => null,
-            'is_active' => false,
-            'last_verified_at' => null,
-            'last_chat_synced_at' => null,
-        ]);
+    //     $setting->update([
+    //         'bot_token' => null,
+    //         'bot_username' => null,
+    //         'admin_chat_id' => null,
+    //         'is_active' => false,
+    //         'last_verified_at' => null,
+    //         'last_chat_synced_at' => null,
+    //     ]);
 
-        return redirect()
-            ->route('admin.telegram-settings.index')
-            ->with('success', 'Telegram bot token reset successfully. You can add a new token now.');
-    }
+    //     return redirect()
+    //         ->route('admin.telegram-settings.index')
+    //         ->with('success', 'Telegram bot token reset successfully. You can add a new token now.');
+    // }
 
     public function verify(TelegramService $telegramService)
     {
