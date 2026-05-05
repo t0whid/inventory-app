@@ -17,3 +17,8 @@ Schedule::command('oos:missing-alert')
     ->dailyAt('17:30')
     ->timezone('Asia/Kolkata')
     ->withoutOverlapping();
+
+Schedule::command('daily:summary')
+    ->dailyAt('18:00')
+    ->timezone('Asia/Kolkata')
+    ->withoutOverlapping();
