@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <div class="page-card">
+    {{-- <div class="page-card">
         <h5 class="mb-3">Unmatched Petpooja Items</h5>
 
         @if(count($report['unmatched']) > 0)
@@ -149,6 +149,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> --}}
 @endif
 @endsection
