@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\OOSSubmission;
 use App\Models\OutOfStock;
 use App\Models\Product;
 use App\Models\Staff;
@@ -33,11 +34,16 @@ class OOSController extends Controller
             ->latest()
             ->get();
 
+        $submission = OOSSubmission::whereDate('date', $date)
+            ->where('staff_id', $staffId)
+            ->first();
+
         return view('staff.oos.index', compact(
             'date',
             'products',
             'selectedProductIds',
-            'oosList'
+            'oosList',
+            'submission'
         ));
     }
 
@@ -83,6 +89,17 @@ class OOSController extends Controller
                     'marked_time' => now()->format('H:i:s'),
                 ]);
             }
+
+            OOSSubmission::updateOrCreate(
+                [
+                    'date' => $date,
+                    'staff_id' => $staffId,
+                ],
+                [
+                    'submitted_time' => now()->format('H:i:s'),
+                    'oos_count' => count($productIds),
+                ]
+            );
         });
 
         $this->sendOOSTelegramAlert(
