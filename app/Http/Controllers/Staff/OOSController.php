@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\OutOfStock;
 use App\Models\Product;
 use App\Models\Staff;
+use App\Services\TelegramService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OOSController extends Controller
 {
@@ -39,7 +41,7 @@ class OOSController extends Controller
         ));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, TelegramService $telegramService)
     {
         $validated = $request->validate([
             'date' => ['required', 'date'],
@@ -49,7 +51,11 @@ class OOSController extends Controller
 
         $staffId = session('staff_id');
 
-        if (!$staffId || !Staff::where('id', $staffId)->where('is_active', true)->exists()) {
+        $staff = Staff::where('id', $staffId)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$staff) {
             $request->session()->forget([
                 'staff_id',
                 'staff_name',
@@ -79,8 +85,63 @@ class OOSController extends Controller
             }
         });
 
+        $this->sendOOSTelegramAlert(
+            telegramService: $telegramService,
+            staff: $staff,
+            date: $date,
+            productIds: $productIds
+        );
+
         return redirect()
             ->route('staff.oos.index', ['date' => $date])
             ->with('success', 'OOS items saved successfully.');
+    }
+
+    private function sendOOSTelegramAlert(
+        TelegramService $telegramService,
+        Staff $staff,
+        string $date,
+        array $productIds
+    ): void {
+        try {
+            if (empty($productIds)) {
+                return;
+            }
+
+            $products = Product::whereIn('id', $productIds)
+                ->orderBy('product_name')
+                ->get();
+
+            if ($products->isEmpty()) {
+                return;
+            }
+
+            $itemLines = $products
+                ->values()
+                ->map(function ($product, $index) {
+                    return ($index + 1) . '. ' . e($product->product_name);
+                })
+                ->implode("\n");
+
+            $formattedDate = Carbon::parse($date)->format('d M Y');
+            $formattedTime = now()->format('h:i A');
+
+            $message = "🚨 <b>OOS Alert</b>\n\n"
+                . "<b>Staff:</b> " . e($staff->name) . "\n"
+                . "<b>Date:</b> {$formattedDate}\n"
+                . "<b>Time:</b> {$formattedTime}\n\n"
+                . "<b>Out of Stock Items:</b>\n"
+                . $itemLines . "\n\n"
+                . "Action Needed";
+
+            $telegramService->sendMessage($message, null, 'oos_alert');
+        } catch (\Throwable $e) {
+            Log::error('OOS Telegram alert failed', [
+                'staff_id' => $staff->id,
+                'date' => $date,
+                'product_ids' => $productIds,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
