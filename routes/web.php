@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DailyStockController;
 use App\Http\Controllers\Admin\PetpoojaSyncController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\TelegramSettingController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\StaffAuthController;
 use App\Http\Controllers\Staff\OOSController;
@@ -51,6 +52,13 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::get('/petpooja-sync', [PetpoojaSyncController::class, 'index'])->name('petpooja-sync.index');
     Route::post('/petpooja-sync', [PetpoojaSyncController::class, 'sync'])->name('petpooja-sync.sync');
     Route::get('/daily-stocks', [DailyStockController::class, 'index'])->name('daily-stocks.index');
+
+    Route::get('/telegram-settings', [TelegramSettingController::class, 'index'])->name('telegram-settings.index');
+    Route::post('/telegram-settings', [TelegramSettingController::class, 'update'])->name('telegram-settings.update');
+    Route::delete('/telegram-settings/reset-token', [TelegramSettingController::class, 'resetToken'])->name('telegram-settings.reset-token');
+    Route::post('/telegram-settings/verify', [TelegramSettingController::class, 'verify'])->name('telegram-settings.verify');
+    Route::post('/telegram-settings/sync-chat', [TelegramSettingController::class, 'syncChat'])->name('telegram-settings.sync-chat');
+    Route::post('/telegram-settings/test', [TelegramSettingController::class, 'test'])->name('telegram-settings.test');
 });
 
 /*

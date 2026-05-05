@@ -278,6 +278,12 @@
                     Alerts
                 </a>
 
+                <a href="{{ route('admin.telegram-settings.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.telegram-settings.*') ? 'active' : '' }}">
+                    <i class="fa-brands fa-telegram me-2"></i>
+                    Telegram
+                </a>
+
                 <a href="#" class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
                     <i class="fa-solid fa-gear"></i>
                     Settings
