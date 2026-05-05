@@ -251,7 +251,11 @@
                     <i class="fa-solid fa-box"></i>
                     Products
                 </a>
-
+                <a href="{{ route('admin.daily-stocks.index') }}"
+                    class="{{ request()->routeIs('admin.daily-stocks.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    Daily Stocks
+                </a>
                 <a href="{{ route('admin.staffs.index') }}"
                     class="{{ request()->routeIs('admin.staffs.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-users"></i>

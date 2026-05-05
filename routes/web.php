@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\DailyStockController;
 use App\Http\Controllers\Admin\PetpoojaSyncController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StaffController;
@@ -49,6 +50,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::resource('products', ProductController::class)->except(['show']);
     Route::get('/petpooja-sync', [PetpoojaSyncController::class, 'index'])->name('petpooja-sync.index');
     Route::post('/petpooja-sync', [PetpoojaSyncController::class, 'sync'])->name('petpooja-sync.sync');
+    Route::get('/daily-stocks', [DailyStockController::class, 'index'])->name('daily-stocks.index');
 });
 
 /*
