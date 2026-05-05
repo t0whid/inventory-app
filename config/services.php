@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'petpooja' => [
+        'base_url' => env('PETPOOJA_BASE_URL', 'https://api.petpooja.com/V1/thirdparty'),
+        'get_orders_endpoint' => env('PETPOOJA_GET_ORDERS_ENDPOINT', '/generic_get_orders/'),
+        'app_key' => env('PETPOOJA_APP_KEY'),
+        'app_secret' => env('PETPOOJA_APP_SECRET'),
+        'access_token' => env('PETPOOJA_ACCESS_TOKEN'),
+        'rest_id' => env('PETPOOJA_REST_ID'),
+        'cookie_name' => env('PETPOOJA_COOKIE_NAME', 'PETPOOJA_API'),
+        'cookie_value' => env('PETPOOJA_COOKIE_VALUE'),
+    ],
+
 ];

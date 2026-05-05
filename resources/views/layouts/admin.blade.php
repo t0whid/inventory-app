@@ -258,6 +258,12 @@
                     Staffs
                 </a>
 
+                <a href="{{ route('admin.petpooja-sync.index') }}"
+                    class="{{ request()->routeIs('admin.petpooja-sync.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-plug"></i>
+                    Petpooja Sync
+                </a>
+
                 <a href="#" class="{{ request()->is('admin/reports*') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-line"></i>
                     Reports
