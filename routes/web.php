@@ -13,6 +13,7 @@ use App\Http\Controllers\Staff\OOSController;
 use App\Http\Controllers\Staff\StockEntryController;
 use App\Http\Controllers\Staff\WastageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\IncentiveController;
 
 Route::get('/', function () {
     return redirect()->route('staff.login');
@@ -61,6 +62,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::post('/telegram-settings/sync-chat', [TelegramSettingController::class, 'syncChat'])->name('telegram-settings.sync-chat');
     Route::post('/telegram-settings/test', [TelegramSettingController::class, 'test'])->name('telegram-settings.test');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/incentives', [IncentiveController::class, 'index'])->name('incentives.index');
 });
 
 /*

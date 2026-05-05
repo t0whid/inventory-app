@@ -274,9 +274,10 @@
                     Reports
                 </a>
 
-                <a href="#" class="{{ request()->is('admin/alerts*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-bell"></i>
-                    Alerts
+                <a href="{{ route('admin.incentives.index') }}"
+                    class="{{ request()->routeIs('admin.incentives.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-gift me-2"></i>
+                    Incentives
                 </a>
 
                 <a href="{{ route('admin.telegram-settings.index') }}"
