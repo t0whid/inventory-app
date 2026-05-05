@@ -114,6 +114,7 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
+                    <th style="width: 70px;">SL</th>
                     <th>Product</th>
                     <th>Opening</th>
                     <th>Production</th>
@@ -132,6 +133,10 @@
                     @endphp
 
                     <tr>
+                        <td>
+                            {{ $dailyStocks->firstItem() + $loop->index }}
+                        </td>
+
                         <td>
                             <div class="fw-semibold">
                                 {{ $stock->product->product_name ?? 'Product Deleted' }}
@@ -184,7 +189,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">
+                        <td colspan="9" class="text-center text-muted py-4">
                             <i class="fa-solid fa-clipboard-list fa-2x mb-2"></i>
                             <div>No daily stock found for this date.</div>
                         </td>
@@ -194,7 +199,7 @@
         </table>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 d-flex justify-content-end">
         {{ $dailyStocks->links() }}
     </div>
 </div>

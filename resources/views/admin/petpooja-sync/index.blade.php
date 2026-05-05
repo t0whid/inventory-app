@@ -80,6 +80,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 70px;">SL</th>
                         <th>Product</th>
                         <th>Sales Qty</th>
                         <th>Sales Amount</th>
@@ -90,6 +91,7 @@
                 <tbody>
                     @forelse($report['matched'] as $item)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['product_name'] }}</td>
                             <td>{{ $item['sales_qty'] }}</td>
                             <td>₹{{ number_format($item['sales_amount'], 2) }}</td>
@@ -103,7 +105,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-muted">No matched item.</td>
+                            <td colspan="5" class="text-center text-muted">No matched item.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -124,6 +126,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 70px;">SL</th>
                         <th>Petpooja Item Name</th>
                         <th>Qty</th>
                         <th>Amount</th>
@@ -133,13 +136,14 @@
                 <tbody>
                     @forelse($report['unmatched'] as $item)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['item_name'] }}</td>
                             <td>{{ $item['quantity'] }}</td>
                             <td>₹{{ number_format($item['total'], 2) }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="text-center text-muted">No unmatched item. Great!</td>
+                            <td colspan="4" class="text-center text-muted">No unmatched item. Great!</td>
                         </tr>
                     @endforelse
                 </tbody>

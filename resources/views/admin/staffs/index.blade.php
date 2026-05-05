@@ -23,6 +23,7 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
+                    <th style="width: 70px;">SL</th>
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Role</th>
@@ -34,6 +35,10 @@
             <tbody>
                 @forelse($staffs as $staff)
                     <tr>
+                        <td>
+                            {{ $staffs->firstItem() + $loop->index }}
+                        </td>
+
                         <td>
                             <div class="fw-semibold">{{ $staff->name }}</div>
                         </td>
@@ -75,7 +80,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
+                        <td colspan="6" class="text-center text-muted py-4">
                             <i class="fa-solid fa-users-slash fa-2x mb-2"></i>
                             <div>No staff found.</div>
                         </td>
@@ -85,7 +90,7 @@
         </table>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 d-flex justify-content-end">
         {{ $staffs->links() }}
     </div>
 
