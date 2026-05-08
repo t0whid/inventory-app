@@ -13,11 +13,25 @@
             <p class="text-muted mb-0">Create, edit and manage admin panel users.</p>
         </div>
 
-        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-            <i class="fa-solid fa-plus me-1"></i>
-            Create Admin User
-        </a>
+        @if($loggedUser->role === 'super_admin')
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                <i class="fa-solid fa-plus me-1"></i>
+                Create Admin User
+            </a>
+        @endif
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -34,10 +48,40 @@
 
             <tbody>
                 @forelse($users as $user)
+                    @php
+                        $canEdit = false;
+                        $canDelete = false;
+
+                        if ($loggedUser->isRootSuperAdmin()) {
+                            $canEdit = true;
+                            $canDelete = $loggedUser->id !== $user->id;
+                        } elseif ($loggedUser->role === 'super_admin') {
+                            if ($loggedUser->id === $user->id) {
+                                $canEdit = true;
+                                $canDelete = false;
+                            } else {
+                                $canEdit = $user->role === 'admin';
+                                $canDelete = $user->role === 'admin';
+                            }
+                        } elseif ($loggedUser->role === 'admin') {
+                            $canEdit = $loggedUser->id === $user->id;
+                            $canDelete = false;
+                        }
+                    @endphp
+
                     <tr>
                         <td>
-                            <div class="fw-semibold">{{ $user->name }}</div>
-                            <div class="small text-muted d-md-none">{{ $user->email ?? '-' }}</div>
+                            <div class="fw-semibold">
+                                {{ $user->name }}
+
+                                @if($loggedUser->id === $user->id)
+                                    <span class="badge bg-info ms-1">You</span>
+                                @endif
+                            </div>
+
+                            <div class="small text-muted d-md-none">
+                                {{ $user->email ?? '-' }}
+                            </div>
                         </td>
 
                         <td>{{ $user->phone }}</td>
@@ -69,21 +113,29 @@
                         </td>
 
                         <td class="text-end">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
+                            @if($canEdit || $canDelete)
+                                <div class="d-flex justify-content-end gap-2">
+                                    @if($canEdit)
+                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                    @endif
 
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to delete this admin user?')">
-                                    @csrf
-                                    @method('DELETE')
+                                    @if($canDelete)
+                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                              onsubmit="return confirm('Are you sure you want to delete this admin user?')">
+                                            @csrf
+                                            @method('DELETE')
 
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="text-muted small">No action</span>
+                            @endif
                         </td>
                     </tr>
                 @empty

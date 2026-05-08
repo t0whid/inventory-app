@@ -26,9 +26,19 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function isRootSuperAdmin(): bool
+    {
+        $rootPhone = config('app.root_super_admin_phone');
+
+        return $this->role === 'super_admin'
+            && !empty($rootPhone)
+            && $this->phone === $rootPhone;
     }
 
     public function isSuperAdmin(): bool
@@ -36,8 +46,8 @@ class User extends Authenticatable
         return $this->role === 'super_admin';
     }
 
-    public function isRootSuperAdmin(): bool
+    public function isAdmin(): bool
     {
-        return $this->phone === config('app.root_super_admin_phone');
+        return $this->role === 'admin';
     }
 }

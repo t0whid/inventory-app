@@ -16,6 +16,17 @@
         </a>
     </div>
 
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('admin.users.update', $user) }}" method="POST">
         @csrf
         @method('PUT')
@@ -41,27 +52,49 @@
                 <input type="password" name="password" class="form-control" placeholder="Leave empty if unchanged">
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label">Role <span class="text-danger">*</span></label>
-                <select name="role" class="form-select">
-                    <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="super_admin" {{ old('role', $user->role) === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
-                </select>
-            </div>
-
-            <div class="col-md-6 d-flex align-items-end">
-                <div class="form-check form-switch">
-                    <input
-                        type="checkbox"
-                        name="is_active"
-                        value="1"
-                        class="form-check-input"
-                        id="isActive"
-                        {{ old('is_active', $user->is_active) ? 'checked' : '' }}
-                    >
-                    <label class="form-check-label" for="isActive">Active User</label>
+            @if($canManageRoleStatus)
+                <div class="col-md-6">
+                    <label class="form-label">Role <span class="text-danger">*</span></label>
+                    <select name="role" class="form-select">
+                        <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="super_admin" {{ old('role', $user->role) === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                    </select>
                 </div>
-            </div>
+
+                <div class="col-md-6 d-flex align-items-end">
+                    <div class="form-check form-switch">
+                        <input
+                            type="checkbox"
+                            name="is_active"
+                            value="1"
+                            class="form-check-input"
+                            id="isActive"
+                            {{ old('is_active', $user->is_active) ? 'checked' : '' }}
+                        >
+                        <label class="form-check-label" for="isActive">Active User</label>
+                    </div>
+                </div>
+            @else
+                <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ $user->role === 'super_admin' ? 'Super Admin' : 'Admin' }}"
+                        disabled
+                    >
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ $user->is_active ? 'Active' : 'Inactive' }}"
+                        disabled
+                    >
+                </div>
+            @endif
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-4">

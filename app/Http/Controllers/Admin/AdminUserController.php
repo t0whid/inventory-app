@@ -12,18 +12,50 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->paginate(20);
+        $loggedUser = Auth::user();
 
-        return view('admin.users.index', compact('users'));
+        $query = User::latest();
+
+        /*
+         * Root super admin is hidden from everyone except root super admin.
+         * No UI will show that root super admin exists.
+         */
+        if (!$loggedUser->isRootSuperAdmin()) {
+            $rootUserId = $this->rootSuperAdminId();
+
+            if ($rootUserId) {
+                $query->where('id', '!=', $rootUserId);
+            }
+        }
+
+        $users = $query->paginate(20);
+
+        return view('admin.users.index', compact('users', 'loggedUser'));
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        $loggedUser = Auth::user();
+
+        if (!$this->canCreateUser($loggedUser)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'You are not allowed to create admin users.');
+        }
+
+        return view('admin.users.create', compact('loggedUser'));
     }
 
     public function store(Request $request)
     {
+        $loggedUser = Auth::user();
+
+        if (!$this->canCreateUser($loggedUser)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'You are not allowed to create admin users.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:30', 'unique:users,phone'],
@@ -44,14 +76,34 @@ class AdminUserController extends Controller
 
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $loggedUser = Auth::user();
+
+        if (!$this->canEditUser($loggedUser, $user)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'You are not allowed to edit this user.');
+        }
+
+        $canManageRoleStatus = $this->canManageRoleStatus($loggedUser, $user);
+
+        return view('admin.users.edit', compact(
+            'user',
+            'loggedUser',
+            'canManageRoleStatus'
+        ));
     }
 
     public function update(Request $request, User $user)
     {
         $loggedUser = Auth::user();
 
-        $validated = $request->validate([
+        if (!$this->canEditUser($loggedUser, $user)) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'You are not allowed to update this user.');
+        }
+
+        $rules = [
             'name' => ['required', 'string', 'max:100'],
             'phone' => [
                 'required',
@@ -66,25 +118,24 @@ class AdminUserController extends Controller
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
             'password' => ['nullable', 'string', 'min:6'],
-            'role' => ['required', Rule::in(['super_admin', 'admin'])],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        ];
 
-        if (
-            $user->role === 'super_admin'
-            && $validated['role'] !== 'super_admin'
-            && !$loggedUser->isRootSuperAdmin()
-        ) {
-            return back()
-                ->withInput()
-                ->with('error', 'Only Towhid can change a super admin role.');
+        if ($this->canManageRoleStatus($loggedUser, $user)) {
+            $rules['role'] = ['required', Rule::in(['super_admin', 'admin'])];
+            $rules['is_active'] = ['nullable', 'boolean'];
         }
+
+        $validated = $request->validate($rules);
 
         if (empty($validated['password'])) {
             unset($validated['password']);
         }
 
-        $validated['is_active'] = $request->boolean('is_active');
+        if ($this->canManageRoleStatus($loggedUser, $user)) {
+            $validated['is_active'] = $request->boolean('is_active');
+        } else {
+            unset($validated['role'], $validated['is_active']);
+        }
 
         $user->update($validated);
 
@@ -97,12 +148,8 @@ class AdminUserController extends Controller
     {
         $loggedUser = Auth::user();
 
-        if ($loggedUser->id === $user->id) {
-            return back()->with('error', 'You cannot delete your own account.');
-        }
-
-        if ($user->role === 'super_admin' && !$loggedUser->isRootSuperAdmin()) {
-            return back()->with('error', 'Only Towhid can delete a super admin.');
+        if (!$this->canDeleteUser($loggedUser, $user)) {
+            return back()->with('error', 'You are not allowed to delete this user.');
         }
 
         $user->delete();
@@ -110,5 +157,88 @@ class AdminUserController extends Controller
         return redirect()
             ->route('admin.users.index')
             ->with('success', 'Admin user deleted successfully.');
+    }
+
+    private function canCreateUser(User $loggedUser): bool
+    {
+        return $loggedUser->role === 'super_admin';
+    }
+
+    private function canEditUser(User $loggedUser, User $targetUser): bool
+    {
+        if ($loggedUser->isRootSuperAdmin()) {
+            return true;
+        }
+
+        if ($targetUser->isRootSuperAdmin()) {
+            return false;
+        }
+
+        if ($loggedUser->role === 'super_admin') {
+            if ($loggedUser->id === $targetUser->id) {
+                return true;
+            }
+
+            return $targetUser->role === 'admin';
+        }
+
+        if ($loggedUser->role === 'admin') {
+            return $loggedUser->id === $targetUser->id;
+        }
+
+        return false;
+    }
+
+    private function canDeleteUser(User $loggedUser, User $targetUser): bool
+    {
+        if ($loggedUser->id === $targetUser->id) {
+            return false;
+        }
+
+        if ($loggedUser->isRootSuperAdmin()) {
+            return true;
+        }
+
+        if ($targetUser->isRootSuperAdmin()) {
+            return false;
+        }
+
+        if ($loggedUser->role === 'super_admin') {
+            return $targetUser->role === 'admin';
+        }
+
+        return false;
+    }
+
+    private function canManageRoleStatus(User $loggedUser, User $targetUser): bool
+    {
+        if ($loggedUser->isRootSuperAdmin()) {
+            return true;
+        }
+
+        /*
+         * Other super admin can manage admin users only.
+         * Other super admin can edit own profile,
+         * but cannot change own role/status.
+         */
+        if ($loggedUser->role === 'super_admin' && $targetUser->role === 'admin') {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function rootSuperAdminId(): ?int
+    {
+        $rootPhone = config('app.root_super_admin_phone');
+
+        if (!$rootPhone) {
+            return null;
+        }
+
+        return User::query()
+            ->where('role', 'super_admin')
+            ->where('phone', $rootPhone)
+            ->value('id');
     }
 }

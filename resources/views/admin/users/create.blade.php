@@ -16,6 +16,17 @@
         </a>
     </div>
 
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('admin.users.store') }}" method="POST">
         @csrf
 
@@ -27,7 +38,7 @@
 
             <div class="col-md-6">
                 <label class="form-label">Phone <span class="text-danger">*</span></label>
-                <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="01700000000">
+                <input type="text" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="9870000001">
             </div>
 
             <div class="col-md-6">
@@ -50,7 +61,14 @@
 
             <div class="col-md-6 d-flex align-items-end">
                 <div class="form-check form-switch">
-                    <input type="checkbox" name="is_active" value="1" class="form-check-input" id="isActive" checked>
+                    <input
+                        type="checkbox"
+                        name="is_active"
+                        value="1"
+                        class="form-check-input"
+                        id="isActive"
+                        {{ old('is_active', true) ? 'checked' : '' }}
+                    >
                     <label class="form-check-label" for="isActive">Active User</label>
                 </div>
             </div>
