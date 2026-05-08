@@ -25,7 +25,7 @@ class StaffController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'phone' => ['required', 'string', 'max:30', 'unique:staffs,phone'],
+            'phone' => ['required', 'string', 'max:30', 'unique:staff,phone'],
             'pin' => ['required', 'regex:/^[0-9]{4,8}$/'],
             'role' => ['nullable', 'string', 'max:100'],
             'is_active' => ['nullable', 'boolean'],
@@ -55,7 +55,7 @@ class StaffController extends Controller
                 'required',
                 'string',
                 'max:30',
-                Rule::unique('staffs', 'phone')->ignore($staff->id),
+                Rule::unique('staff', 'phone')->ignore($staff->id),
             ],
             'pin' => ['nullable', 'regex:/^[0-9]{4,8}$/'],
             'role' => ['nullable', 'string', 'max:100'],
